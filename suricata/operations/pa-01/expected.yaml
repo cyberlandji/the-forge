@@ -16,6 +16,6 @@ fixtures:
     must_fire: [1000001, 1000002, 1000003]            # <- your real STRRAT SID(s)
 
   # A benign capture that must NOT trigger them (false-positive guard).
-  # Add this once the known-bad case is green:
-  # - pcap: fixtures/known-good/REPLACE-with-benign.pcap
-  #   must_not_fire: [1000001]
+  - pcap: fixtures/known-good/pa-01-known-good.pcap
+    must_not_fire: [1000001, 1000002, 1000003]
+
