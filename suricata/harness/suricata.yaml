@@ -7,6 +7,9 @@ vars:
   port-groups:
     HTTP_PORTS: "80"
 
+classification-file: suricata/harness/classification.config
+reference-config-file: suricata/harness/reference.config
+
 app-layer:
   protocols:
     http:
