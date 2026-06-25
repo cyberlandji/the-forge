@@ -1,0 +1,16 @@
+# Suricata runtime output (harness writes these to temp dirs, but just in case)
+eve.json
+fast.log
+stats.log
+suricata.log
+*.log
+
+# Python
+__pycache__/
+*.pyc
+.venv/
+venv/
+
+# Editors
+.vscode/
+.idea/

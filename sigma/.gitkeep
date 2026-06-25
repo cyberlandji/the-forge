@@ -1,0 +1,5 @@
+# Sigma track -- not started yet.
+# When you begin it, this folder mirrors the suricata/ layout:
+#   sigma/operations/<op>/rules/, fixtures/, expected.yaml
+#   sigma/harness/ (sigma-cli conversion + backend checks)
+# and you add .github/workflows/sigma.yml at the repo root.

@@ -1,0 +1,42 @@
+name: Forge -- Suricata validation
+
+# Runs on every push for now. When you add the Sigma track, create a second
+# file (sigma.yml) beside this one, and scope BOTH with a paths filter so each
+# only runs when its own folder changes, e.g.:
+#
+#   on:
+#     push:
+#       paths:
+#         - 'suricata/**'
+#         - '.github/workflows/suricata.yml'
+#
+# Until then, unscoped is simpler to reason about.
+
+on:
+  push:
+  pull_request:
+
+jobs:
+  validate:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Check out repo
+        uses: actions/checkout@v4
+
+      - name: Install Suricata
+        run: |
+          sudo add-apt-repository ppa:oisf/suricata-stable -y
+          sudo apt-get update
+          sudo apt-get install -y suricata
+          suricata --build-info | head -n 3
+
+      - name: Set up Python
+        uses: actions/setup-python@v5
+        with:
+          python-version: "3.12"
+
+      - name: Install harness dependencies
+        run: pip install pyyaml
+
+      - name: Run Suricata rule validation
+        run: python suricata/harness/run_tests.py

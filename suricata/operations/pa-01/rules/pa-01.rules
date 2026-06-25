@@ -1,0 +1,8 @@
+# operations/pa-01/rules/pa-01.rules
+#
+# Paste your 3 validated STRRAT behavioral rules here.
+# Remember the PA-01 lesson: these are behavioral (content-match fails on
+# encrypted C2), so when you trim a fixture PCAP, keep enough of the flow
+# intact for the rule to still fire.
+#
+# Start with ONE rule to get the pipeline green, then add the other two.
