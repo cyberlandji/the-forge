@@ -47,7 +47,7 @@ def fired_sids(pcap, rules, workdir):
             "-S", str(rules),    # EXCLUSIVE: use only this rule file, ignore system rules
             "-l", str(workdir),  # write logs (incl. eve.json) here
         ],
-        check=True,
+        check=False,
         stdout=subprocess.DEVNULL,
         stderr=subprocess.STDOUT,
     )

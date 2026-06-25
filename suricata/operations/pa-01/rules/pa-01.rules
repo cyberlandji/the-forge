@@ -6,3 +6,15 @@
 # intact for the rule to still fire.
 #
 # Start with ONE rule to get the pipeline green, then add the other two.
+
+#Rule1
+
+alert tcp $HOME_NET any -> $EXTERNAL_NET 12132 (msg:"PA-01 - Outbound TCP to Non-Standard Port 12132 (Possible STRRAT C2)"; flow:established,to_server; threshold:type limit, track by_src, count 1, seconds 300; sid:1000001; rev:2;)
+
+#Rule 2
+
+alert http $HOME_NET any -> $EXTERNAL_NET $HTTP_PORTS (msg:"Possible Post-Infection Recon - GeoIP Lookup to ip-api.com"; http.host; content:"ip-api.com"; http.uri; content:"/json"; sid:1000002; rev:1;)
+
+#Rule 3
+
+alert tcp $HOME_NET any -> $EXTERNAL_NET ![80,443,53,8080] (msg:"PA-01 - Sustained C2 Session on Non-Standard Port (Small Packets)"; flow:established; dsize:<200; threshold:type both, track by_dst, count 20, seconds 60; sid:1000003; rev:2;)

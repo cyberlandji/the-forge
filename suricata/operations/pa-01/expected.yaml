@@ -12,8 +12,8 @@ rules: rules/pa-01.rules
 
 fixtures:
   # A capture that SHOULD trigger your rule(s):
-  - pcap: fixtures/known-bad/REPLACE-with-strrat.pcap
-    must_fire: [1000001]            # <- your real STRRAT SID(s)
+  - pcap: fixtures/known-bad/straat-c2.pcap
+    must_fire: [1000001, 1000002, 1000003]            # <- your real STRRAT SID(s)
 
   # A benign capture that must NOT trigger them (false-positive guard).
   # Add this once the known-bad case is green:
