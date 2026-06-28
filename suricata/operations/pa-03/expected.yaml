@@ -1,0 +1,28 @@
+# PA-03 -- "Kongtuke, Mintsloader, Ghostweaver
+#
+# This manifest is the DECLARATIVE spec: you say what should happen,
+# the harness figures out how to check it. Fill in your real SIDs and
+# the real PCAP filenames once you drop them in.
+#
+# Start with ONE rule + ONE known-bad PCAP to get the pipeline green,
+# then add the other two rules and a known-good fixture.
+
+operation: pa-03
+rules: rules/pa-03.rules
+
+fixtures:
+  # A capture that SHOULD trigger your rule(s):
+  - pcap: fixtures/known-bad/kongtuke-mintsloader-ghostweaver-1.pcap
+    must_fire: [100001, 100006]
+
+  - pcap: fixtures/known-bad/kongtuke-mintsloader-ghostweaver-2.pcap
+    must_fire: [100002, 100003, 100004, 100005, 100007, 100008, 100009, 100010, 100011, 100012, 100013, 100014, 100015, 100016]
+
+  # ordinary benign traffic - nothing fire
+  - pcap: fixtures/known-good/benign-clean.pcap
+    must_not_fire: [100001, 100002, 100003, 100004, 100005, 100007, 100008, 100009, 100010, 100011, 100012, 100013, 100006, 100014, 100015, 100016]
+
+  #benign cousins of the technique - precise rules silent, broad rules fire BY DESIGN
+  - pcap: fixtures/benign-adversarial/cousins.pcap
+    must_fire: [100011,100012,100013,100014,100015]
+    must_not_fire: [100001,100002,100003,100004,100005,100006,100007,100008,100009,100010,100016]
