@@ -1,0 +1,43 @@
+#DNS
+
+alert dns $HOME_NET any -> any any (msg:"PA-03 - KongTuke/MintsLoader/Ghostweaver - DNS query to soulversr.com (initial access)"; dns.query; content:"soulversr.com"; nocase; sid:100001; rev:1;)
+
+alert dns $HOME_NET any -> any any (msg:"PA-03 - KongTuke/MintsLoader/Ghostweaver - DNS query to sbwur1.top (payload delivery)"; dns.query; content:"sbwur1.top"; nocase; sid:100002; rev:1;)
+
+alert dns $HOME_NET any -> any any (msg:"PA-03 - KongTuke/MintsLoader/Ghostweaver - DNS query to 4ec74y9kph5vko2.top ( C2 - DGA primary)"; dns.query; content:"4ec74y9kph5vko2.top"; nocase; sid:100003; rev:1;)
+
+alert dns $HOME_NET any -> any any (msg:"PA-03 - KongTuke/MintsLoader/Ghostweaver - DNS query to 0auuj2cvzpntnfb.top ( C2 - DGA Fallback)"; dns.query; content:"0auuj2cvzpntnfb.top"; nocase; sid:100004; rev:1;)
+
+alert dns $HOME_NET any -> any any (msg:"PA-03 - KongTuke/MintsLoader/Ghostweaver - DNS query to gecdfcjcbcmmakk.top (payload delivery)"; dns.query; content:"gecdfcjcbcmmakk.top"; nocase; sid:100005; rev:1;)
+
+
+#TLS
+
+alert tls $HOME_NET any -> $EXTERNAL_NET 443 (msg:"PA-03 - KongTuke/MintsLoader/Ghostweaver - TLS SNI to soulversr.com (initial access)"; tls.sni; content:"soulversr.com"; nocase; sid:100006; rev:1;)
+
+alert tls $HOME_NET any -> $EXTERNAL_NET any (msg:"PA-03 - KongTuke/MintsLoader/Ghostweaver - JA3 + 173.232.146.62  ( C2  - DGA Primary - port 25658) "; ja3.hash; content:"07af4aa9e4d215a5ee63f9a0a277fbe3"; sid:100007; rev:1;)
+
+
+
+#HTTP
+
+alert http $HOME_NET any -> $EXTERNAL_NET any (msg:"... host 85.137.253.64 (loader/stager - port 3456)"; http.host; content:"85.137.253.64"; sid:100009; rev:2;)
+
+alert http $HOME_NET any -> $EXTERNAL_NET any (msg:"PA-03 - KongTuke/MintsLoader/Ghostweaver - host sbwur1.top (payload delivery)"; http.host; content:"sbwur1.top"; sid:100010; rev:1;)
+
+alert http $HOME_NET any -> $EXTERNAL_NET any (msg:"PA-03 - KongTuke/MintsLoader/Ghostweaver - user-agent (loader/stager)"; http.user_agent; content:"WindowsPowerShell"; sid:100011; rev:1;)
+
+alert http $EXTERNAL_NET any -> $HOME_NET any (msg:"PA-03 - KongTuke/MintsLoader/GhostWeaver - Werkzeug server header (loader/stager)"; http.header; content:"Server"; content:"Werkzeug"; sid:100012; rev:3;)
+
+alert http $EXTERNAL_NET any -> $HOME_NET any (msg:"... Content-Disposition script file delivery (loader/stager)"; http.header; content:"Content-Disposition|3a|"; pcre:"/filename=\s*.*?\.(ps1|bat|vbs|hta|psm1)/Ri"; classtype:policy-violation; sid:100013; rev:2;)
+
+alert http $HOME_NET any -> $EXTERNAL_NET any (msg:"PA-03 - KongTuke/MintsLoader/GhostWeaver - POST /m check-in (loader/stager - AV enumeration)"; http.method; content:"POST"; http.uri; content:"/m"; endswith; http.request_body; content:"message="; sid:100014; rev:1;)
+
+alert http $EXTERNAL_NET any -> $HOME_NET any (msg:"PA-03 - KongTuke/MintsLoader/GhostWeaver - PowerShell payload delivery with hidden window (payload delivery)"; http.response_body; content:"DllImport"; content:"windowstyle hidden"; nocase; sid:100015; rev:1;)
+
+
+#TCP
+
+alert tcp $HOME_NET any -> $EXTERNAL_NET 79 (msg:"PA-03 - KongTuke/MintsLoader/Ghostweaver - finger protocol (Covert Callback)"; sid:100016;rev:1;)
+
+alert tcp $HOME_NET any -> 173.232.146.62 25658 (msg:"PA-03 - KongTuke/MintsLoader/GhostWeaver - TCP to 173.232.146.62:25658 (C2 - DGA Primary)"; sid:100008; rev:3;)
