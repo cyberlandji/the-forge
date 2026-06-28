@@ -1,0 +1,50 @@
+# operations/pa-02/rules/pa-02.rules
+#
+
+#Rule1
+
+alert dns $HOME_NET any -> any any (msg:"PA-02 - Lumma Stealer - DNS query to hiyter.com (initial beacon)"; dns.query; content:"hiyter.com"; nocase; sid:100001; rev:1;)
+
+#Rule 2
+
+alert dns $HOME_NET any -> any any (msg:"PA-02 - Lumma Stealer - DNS query to archfilemegahab4.sbs (payload delivery)"; dns.query; content:"arch.filemegahab4.sbs"; nocase; sid:100002; rev:1;)
+
+#Rule 3
+
+alert dns $HOME_NET any -> any any (msg:"PA-02 - Lumma Stealer - DNS query to media.megafilehub4.lat  (payload delivery)"; dns.query; content:"media.megafilehub4.lat"; nocase; sid:100003; rev:1;)
+
+#Rule 4
+
+alert dns $HOME_NET any -> any any (msg:"PA-02 - Lumma Stealer - DNS query to whooptm.cyou  (staging/config)"; dns.query; content:"whooptm.cyou"; nocase; sid:100004; rev:1;)
+
+#Rule 5
+
+alert dns $HOME_NET any -> any any (msg:"PA-02 - Lumma Stealer - DNS query to whitepepper.su  (C2/Exfiltration)"; dns.query; content:"whitepepper.su"; nocase; sid:100005; rev:1;)
+
+#Rule 6
+
+alert tls $HOME_NET any -> $EXTERNAL_NET 443 (msg:"PA-02 - Lumma Stealer - TLS SNI to whooptm (staging/config)"; tls.sni; content:"whooptm.cyou"; nocase; sid:100007; rev:1;)
+
+#Rule 7
+
+alert tls $HOME_NET any -> $EXTERNAL_NET 443 (msg:"PA-02 - Lumma Stealer - TLS SNI to media.megafilehub4.lat (payload delivery)"; tls.sni; content:"media.megafilehub4.lat"; nocase; sid:100008; rev:1;)
+
+#Rule 8
+
+alert tls $HOME_NET any -> $EXTERNAL_NET 443 (msg:"PA-02 - Lumma Stealer - TLS SNI to whitepepper.su (C2 exfiltration)"; tls.sni; content:"whitepepper.su"; nocase; sid:100009; rev:1;)
+
+#Rule 9
+
+alert tls $HOME_NET any -> $EXTERNAL_NET 443 (msg:"PA-02 - Lumma Stealer - JA3 + SNI correlation to whitepepper.su (C2 exfil module)"; tls.sni; content:"whitepepper.su"; nocase; ja3.hash; content:"2800f914a7a4ba98aa9df62d316a460c"; sid:100010; rev:1;)
+
+#Rule 10
+
+alert http $HOME_NET any -> $EXTERNAL_NET any (msg:"PA-02 - Lumma Stealer - HTTP to whitepepper.su (C2 exfiltration)"; http.host; content:"whitepepper.su"; sid:100011; rev:1;)
+
+#Rule 11
+
+alert http $HOME_NET any -> $EXTERNAL_NET any (msg:"PA-02 - Lumma Stealer - POST /api/set_agent to whitepepper.su (C2 exfiltration)"; http.method; content:"POST"; http.host; content:"whitepepper.su"; http.uri; content:"/api/set_agent"; sid:100012; rev:1;)
+
+#Rule 12
+
+alert http $HOME_NET any -> $EXTERNAL_NET any (msg:"PA-02 - Lumma Stealer - POST /api/set_agent with spoofed UA (behavioral - C2 exfiltration)"; http.method; content:"POST"; http.uri; content:"/api/set_agent"; http.user_agent; content:"Chrome/144"; sid:100013; rev:1;)
