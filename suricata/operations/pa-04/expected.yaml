@@ -1,0 +1,22 @@
+# PA-04 -- Easy as 123
+#
+# This manifest is the DECLARATIVE spec: you say what should happen,
+# the harness figures out how to check it. Fill in your real SIDs and
+# the real PCAP filenames once you drop them in.
+#
+# Start with ONE rule + ONE known-bad PCAP to get the pipeline green,
+# then add the other two rules and a known-good fixture.
+
+operation: pa-04
+rules: rules/pa-04.rules
+
+fixtures:
+  # A capture that SHOULD trigger your rule(s):
+  - pcap: fixtures/known-bad/easyas123-1.pcap
+    must_fire: [1000001, 1000002, 1000003, 1000004, 1000005, 1000006, 1000007]
+
+
+  # A benign capture that must NOT trigger them (false-positive guard).
+  - pcap: fixtures/known-good/easyas123-kg.pcap
+    must_not_fire: [1000001, 1000002, 1000003, 1000004, 1000005, 1000006, 1000007]
+

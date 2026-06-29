@@ -1,0 +1,35 @@
+#Tier1 - IOC rules (brittle)
+
+#Rule 1 - DNS query for vadusa[.]xyz 
+
+alert dns $HOME_NET any -> any any (msg:"PA-04 NetSupport C2 - DNS Query for vadusa.xyz"; dns.query; content:"vadusa.xyz"; nocase; classtype:trojan-activity; sid:1000001; rev:1;)
+
+#Rule 2 - Traffic to C2 IP "45.131.214.85"
+
+alert ip $HOME_NET any -> 45.131.214.85 any (msg:"PA-04 NetSupport C2 - Traffic to Known C2 IP 45.131.214.85"; classtype:trojan-activity; sid:1000002; rev:1;)
+
+#Rule 3 - HTTP POST to "/fakeurl.htm"
+
+alert http $HOME_NET any -> any any (msg:"PA-04 NetSupport C2 - HTTP POST to /fakeurl.htm"; flow:established,to_server; http.method; content:"POST"; http.uri; content:"fakeurl.htm"; nocase; classtype:trojan-activity; sid:1000003; rev:1;)
+
+
+#Tier2 - Signature rules (tool family)
+
+#Rule 4 - Client User-Agent NetSupport Manager
+
+alert http $HOME_NET any -> any any (msg:"PA-04 NetSupport RAT - Client User-Agent Observed"; flow:established,to_server; http.user_agent; content:"NetSupport Manager"; nocase; classtype:trojan-activity; sid:1000004; rev:1;)
+
+#Rule 5 - Server banner NetSupport Gateway (response)
+
+alert http any any -> $HOME_NET any (msg:"PA-04 NetSupport RAT - Gateway Server Banner in C2 Response"; flow:established,to_client; http.server; content:"NetSupport Gateway"; nocase; classtype:trojan-activity; sid:1000005; rev:1;)
+
+
+#Tier3 - Behavvioral rules (durable)
+
+#Rule 6 - "CMD=" command protocol in POST body
+
+alert http $HOME_NET any -> any any (msg:"PA-04 NetSupport C2 - Command Protocol (CMD=POLL/ENCD) in POST body"; flow:established,to_server; http.request_body; content:"CMD="; startswith; pcre:"/^CMD=(POLL|ENCD)/"; classtype:trojan-activity; sid:1000006; rev:1;)
+
+#Rule 7 - Plaintext HTTP on port 443 (protocol/port anomaly)
+
+alert http $HOME_NET any -> $EXTERNAL_NET 443 (msg:"PA-04 Anomaly - Plaintext HTTP on Port 443 (TLS Port)"; flow:established,to_server; classtype:protocol-command-decode; sid:1000007; rev:1;)
